@@ -1,8 +1,28 @@
 import { Router } from 'express';
-import { getAllEmployees } from '../controllers/employees';
+import {
+  getAllEmployees,
+  getEmployeeByCode,
+  getMasterRecordByCode,
+  getSensitiveMasterRecordByCode,
+  getEmployeesSubset,
+  getEmployeeSubsetByCode
+} from '../controllers/employees';
 
-const employeeRouter = Router();
+const router = Router();
 
-employeeRouter.get('/', getAllEmployees);
+// employee directory routes
+router.get('/employeedirectory', getAllEmployees);
+router.get('/employeedirectory/:eecode', getEmployeeByCode);
 
-export default employeeRouter;
+// master record routes
+router.get('/employee/:eecode', getMasterRecordByCode);
+router.get(
+  '/employee/:eecode/sensitive',
+  getSensitiveMasterRecordByCode
+);
+
+// employee id routes
+router.get('/employeeid', getEmployeesSubset);
+router.get('/employeeid/:eecode', getEmployeeSubsetByCode);
+
+export default router;

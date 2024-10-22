@@ -1,52 +1,89 @@
 import { Request, Response } from 'express';
-import axios from 'axios';
-import { AppError } from '../middlewares/error';
-import { NextFunction } from 'connect';
 
-export async function getAllEmployees(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
+// all employees and their demographics
+export async function getAllEmployees(req: Request, res: Response) {
   try {
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/users'
-    );
-    const employees = response.data;
-
-    if (!employees) {
-      throw new AppError('No employee data found', 404);
-    }
-    res.json(employees);
+    res.status(200).json({
+      message: 'List of all employees and their demographics'
+    });
   } catch (error) {
-    console.error('Error fetching employee data:', error);
-    res
-      .status(500)
-      .json({ message: 'Failed to fetch employee data' });
-    next(new AppError('Failed to fetch employees data', 500));
+    res.status(500).json({ message: 'Failed to fetch employees' });
   }
 }
 
-export async function getEmployeeById(
+// individual employee by eecode
+export async function getEmployeeByCode(req: Request, res: Response) {
+  try {
+    const { eecode } = req.params;
+    res.status(200).json({ message: `Employee with code ${eecode}` });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch employee' });
+  }
+}
+
+// master record of individual employee
+export async function getMasterRecordByCode(
   req: Request,
-  res: Response,
-  next: NextFunction
+  res: Response
 ) {
   try {
-    const response = await axios.get(
-      `https://jsonplaceholder.typicode.com/users/${req.params.id}`
-    );
-    const employee = response.data;
-
-    if (!employee) {
-      throw new AppError('No employee found', 404);
-    }
-    res.json(employee);
+    const { eecode } = req.params;
+    res
+      .status(200)
+      .json({ message: `Master record for employee ${eecode}` });
   } catch (error) {
-    console.error('Error fetching employee data:', error);
     res
       .status(500)
-      .json({ message: 'Failed to fetch employee data' });
-    next(new AppError('Failed to fetch employee data', 500));
+      .json({ message: 'Failed to fetch master record' });
+  }
+}
+
+// master record including sensitive information
+export async function getSensitiveMasterRecordByCode(
+  req: Request,
+  res: Response
+) {
+  try {
+    const { eecode } = req.params;
+    res.status(200).json({
+      message: `Sensitive master record for employee ${eecode}`
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to fetch sensitive master record' });
+  }
+}
+
+// list of employees by subset of properties
+export async function getEmployeesSubset(
+  req: Request,
+  res: Response
+) {
+  try {
+    res.status(200).json({
+      message: 'List of employees with subset of properties'
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to fetch employees subset' });
+  }
+}
+
+// individual employee with subset of properties
+export async function getEmployeeSubsetByCode(
+  req: Request,
+  res: Response
+) {
+  try {
+    const { eecode } = req.params;
+    res
+      .status(200)
+      .json({ message: `Employee subset with code ${eecode}` });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: 'Failed to fetch employee subset' });
   }
 }

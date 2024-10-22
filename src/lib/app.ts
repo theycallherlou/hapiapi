@@ -4,14 +4,18 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import indexRouter from './routes/index';
-import employeeRouter from './routes/employees';
+import usersRouter from './routes/users';
+import employeesRouter from './routes/employees';
+import changesRouter from './routes/changes';
+import newhireRouter from './routes/newhires';
 import { errorHandler } from './middlewares/error';
 
 dotenv.config();
 
 const app = express();
-app.use(cors());
 app.use(helmet());
+app.use(cors());
+app.use(express.json());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -19,17 +23,17 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 app.get('/health', (req, res) => {
   res.send('Server is healthy!');
 });
 
-
-app.use('/api/v1', indexRouter);
-app.use('/api/v1/employees', employeeRouter);
+app.use('/', indexRouter);
+app.use('/api/v1', usersRouter);
+app.use('/api/v1', employeesRouter);
+app.use('/api/v1', changesRouter);
+app.use('/api/v1', newhireRouter);
 
 app.use(errorHandler);
 
