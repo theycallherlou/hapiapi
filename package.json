@@ -1,0 +1,51 @@
+{
+  "name": "hapiapi",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf ./dist/*",
+    "build": "npm run clean && tsc -b",
+    "lint": "eslint",
+    "test": "jest",
+    "dev": "nodemon --exec tsx ./src/server.ts"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.25.8",
+    "@babel/preset-env": "^7.25.8",
+    "@babel/preset-typescript": "^7.25.7",
+    "@eslint/js": "^9.13.0",
+    "@jest/globals": "^29.7.0",
+    "@types/axios": "^0.9.36",
+    "@types/cors": "^2.8.17",
+    "@types/eslint__js": "^8.42.3",
+    "@types/express": "^5.0.0",
+    "@types/helmet": "^0.0.48",
+    "@types/jest": "^29.5.13",
+    "@types/node": "^22.7.7",
+    "@types/nodemon": "^1.19.6",
+    "@types/supertest": "^6.0.2",
+    "babel-jest": "^29.7.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.11.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "nodemon": "^3.1.7",
+    "prettier": "^3.3.3",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.2.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0"
+  }
+}
