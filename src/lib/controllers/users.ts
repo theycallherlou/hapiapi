@@ -16,7 +16,6 @@ export async function getAllUsers(
     res.json(users);
   } catch (error) {
     console.error('Error fetching user data:', error);
-    res.status(500).json({ message: 'Failed to fetch user data' });
-    next(new AppError('Failed to fetch users data', 500));
+    return next(new AppError('Failed to fetch users data', 500));
   }
 }
