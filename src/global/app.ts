@@ -3,20 +3,22 @@ import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
-import employeesRouter from './routes/employees';
-import changesRouter from './routes/changes';
-import newhireRouter from './routes/newhires';
+import indexRouter from '../lib/routes/index';
+import usersRouter from '../lib/routes/users';
+import employeesRouter from '../lib/routes/employees';
+import changesRouter from '../lib/routes/changes';
+import newhireRouter from '../lib/routes/newhires';
 import { errorHandler } from './middlewares/error';
 
 dotenv.config();
 
 const app = express();
 app.use(helmet());
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-}));
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL
+  })
+);
 app.use(express.json());
 
 const limiter = rateLimit({
