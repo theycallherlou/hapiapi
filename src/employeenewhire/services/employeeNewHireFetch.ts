@@ -11,7 +11,6 @@ const apiClient = axios.create({
   }
 });
 
-
 /**
  * Fetches all employee new hires between the given start and end dates.
  *
@@ -27,9 +26,11 @@ export async function fetchEmployeeNewHires(
     const response = await apiClient.get<IEmployeeNewHire[]>(
       `${UrlParameters.EmployeeNewHire}?startDate=${startDate}&endDate=${endDate}`
     );
+    // TODO: "delete debug logs throughout"
     console.info('Employee New Hires:', response.data);
     return response.data;
   } catch (error) {
+    // TODO: "delete debug logs throughout"
     console.error('Failed to fetch employee new hires', error);
     return null;
   }
@@ -48,12 +49,14 @@ export async function fetchEmployeeNewHireByCode(
     const response = await apiClient.get<IEmployeeNewHire>(
       `${UrlParameters.EmployeeNewHire}/${eecode}`
     );
+    // TODO: "delete debug logs throughout"
     console.info(
       `Employee New Hire with EE Code ${eecode}:`,
       response.data
     );
     return response.data;
   } catch (error) {
+    // TODO: "delete debug logs throughout"
     console.error(
       `Failed to fetch employee new hire with EE Code ${eecode}`,
       error
