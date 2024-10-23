@@ -3,8 +3,8 @@ import {
   fetchEmployeeNewHires,
   fetchEmployeeNewHireByCode
 } from '../services/employeeNewHireFetch';
-import { AppError } from '../../global/middlewares/error';
-import { UrlParameters } from '../../global/constants/parameters';
+import { AppError } from '@/global/middlewares/error/AppError';
+import { UrlParameters } from '@/global/constants/parameters';
 import { toUnixTimestamp } from '../utils/timestamp';
 
 const router = Router()

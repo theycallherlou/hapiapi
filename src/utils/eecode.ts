@@ -8,6 +8,6 @@
  * @returns True if the ID is valid, false otherwise.
  */
 
-export function isValidId(id: string): boolean {
+export function validateEeCode(id: string): boolean {
   return /^[0-9A-Z]{4}$/.test(id);
 }

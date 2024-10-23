@@ -3,12 +3,10 @@ import {
   getEmployeeByEecode,
   getPaginatedEmployeeDirectory,
   getEmployeeCustomFields,
-  getEmployeeSensitiveData,
-  getEmployeeChangeInRange,
-  getEmployeeSensitiveChangeInRange
+  getEmployeeSensitiveData
 } from '../services/employeeFetch';
 import { AppError } from '@/global/middlewares/error/AppError';
-import { UrlParameters } from '../../global/constants/parameters';
+import { UrlParameters } from '../../../global/constants/parameters';
 
 const router = Router()
   .get(
@@ -94,58 +92,5 @@ const router = Router()
         next(error);
       }
     }
-  )
-
-  .get(
-    `/${UrlParameters.Employee}/:eecode/change/:changeId`,
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { eecode, changeId } = req.params;
-
-        // Fetch the change data within the date range
-        const change = await getEmployeeChangeInRange(
-          eecode,
-          changeId
-        );
-        if (!change) {
-          return next(
-            new AppError(
-              `Change data for EE code ${eecode} and change ID ${changeId} not found`,
-              404
-            )
-          );
-        }
-
-        res.status(200).json(change);
-      } catch (error) {
-        next(error);
-      }
-    }
-  )
-
-  .get(
-    `/${UrlParameters.Employee}/:eecode/sensitivechange/:changeId`,
-    async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { eecode, changeId } = req.params;
-
-        // Fetch the sensitive change data within the date range
-        const sensitiveChange =
-          await getEmployeeSensitiveChangeInRange(eecode, changeId);
-        if (!sensitiveChange) {
-          return next(
-            new AppError(
-              `Sensitive change data for EE code ${eecode} and change ID ${changeId} not found`,
-              404
-            )
-          );
-        }
-
-        res.status(200).json(sensitiveChange);
-      } catch (error) {
-        next(error);
-      }
-    }
   );
-
 export default router;

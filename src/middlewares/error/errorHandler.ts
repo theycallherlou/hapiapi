@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from './AppError';
-import isAxiosError from './axiosError';
+import isAxiosError from './AxiosError';
 
 /**
  * A centralized error handler for Express.js. This function will catch and handle
@@ -19,7 +19,7 @@ import isAxiosError from './axiosError';
  * @param res - The Express.js response object
  * @param next - The Express.js next function
  */
-export default function errorHandler(
+export function errorHandler(
   err: unknown,
   req: Request,
   res: Response,
