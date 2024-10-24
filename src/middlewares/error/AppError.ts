@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { AxiosError } from 'axios';
 
 class AppError extends Error {
   public statusCode: number;
@@ -12,17 +13,4 @@ class AppError extends Error {
   }
 }
 
-const errorHandler = (
-  err: AppError,
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  console.error('Error:', err);
-  res.status(err.statusCode || 500).json({
-    status: 'error',
-    message: err.isOperational ? err.message : 'Internal Server Error'
-  });
-};
-
-export { AppError, errorHandler };
+export { AppError };
