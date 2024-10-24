@@ -3,57 +3,101 @@ import {
   getEmployeeChangeInRange,
   getEmployeeSensitiveChangeInRange
 } from '../services/changesFetch';
-import { AppError } from '@/global/middlewares/error/AppError';
+import { AppError } from '@/middlewares/error/AppError';
+import logger from '@/services/logger';
+import asyncHandler from '@/services/asyncHandler';
 
 const router = Router();
 
 router.get(
   '/employee/:eecode/change/:changeId',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
+  asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
       const { eecode, changeId } = req.params;
+      const { startDate, endDate } = req.query;
 
-      const change = await getEmployeeChangeInRange(eecode, changeId);
-      if (!change) {
+      logger.info(
+        `Fetching change data for employee ${eecode} with change ID ${changeId}`
+      );
+
+      if (!startDate || !endDate) {
         return next(
           new AppError(
-            `Change data for EE code ${eecode} and change ID ${changeId} not found`,
-            404
+            'startDate and endDate are required query parameters',
+            400
           )
         );
       }
 
-      res.status(200).json(change);
-    } catch (error) {
-      next(error);
+      try {
+        const change = await getEmployeeChangeInRange(
+          eecode,
+          changeId,
+          startDate as string,
+          endDate as string
+        );
+
+        if (!change) {
+          return next(
+            new AppError(
+              `Change data not found for EE code ${eecode} and change ID ${changeId}`,
+              404
+            )
+          );
+        }
+
+        res.status(200).json(change);
+      } catch (error) {
+        next(error);
+      }
     }
-  }
+  )
 );
 
 router.get(
   '/employee/:eecode/sensitivechange/:changeId',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
+  asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
       const { eecode, changeId } = req.params;
+      const { startDate, endDate } = req.query;
 
-      const sensitiveChange = await getEmployeeSensitiveChangeInRange(
-        eecode,
-        changeId
+      logger.info(
+        `Fetching sensitive change data for employee ${eecode} with change ID ${changeId}`
       );
-      if (!sensitiveChange) {
+
+      if (!startDate || !endDate) {
         return next(
           new AppError(
-            `Sensitive change data for EE code ${eecode} and change ID ${changeId} not found`,
-            404
+            'startDate and endDate are required query parameters',
+            400
           )
         );
       }
 
-      res.status(200).json(sensitiveChange);
-    } catch (error) {
-      next(error);
+      try {
+        const sensitiveChange =
+          await getEmployeeSensitiveChangeInRange(
+            eecode,
+            changeId,
+            startDate as string,
+            endDate as string
+          );
+
+        if (!sensitiveChange) {
+          return next(
+            new AppError(
+              `Sensitive change data not found for EE code ${eecode} and change ID ${changeId}`,
+              404
+            )
+          );
+        }
+
+        res.status(200).json(sensitiveChange);
+      } catch (error) {
+        next(error);
+      }
     }
-  }
+  )
 );
 
 export default router;

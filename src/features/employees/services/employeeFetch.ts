@@ -1,18 +1,18 @@
-import { apiClient } from '@/global/services/api';
-import { UrlParameters } from '@/global/constants/parameters';
+import { apiClient } from '@/utils/api';
+import { UrlParameters } from '@/utils/pathParameters';
 import {
   IEmployee,
   IEmployeeCustomFields,
   IEmployeeSensitive,
   IEmployeeDirectoryCallResponse
 } from '../types';
-import isAxiosError from '@/global/middlewares/error/axiosError';
-import { AxiosError } from 'axios';
+import { handleServiceError } from '@/middlewares/error/servicesError';
+import logger from '@/services/logger';
 
 /**
  * Fetches employee data for an individual employee by their EE Code.
  *
- * @param eecode The EE Code of the employee to fetch data for.
+ * @param eecode - The EE Code of the employee to fetch data for.
  * @returns A promise that resolves to the fetched employee data, or null if there was an error.
  */
 export async function getEmployeeByEecode(
@@ -22,24 +22,20 @@ export async function getEmployeeByEecode(
     const response = await apiClient.get<IEmployee>(
       `/${UrlParameters.Employee}/${eecode}`
     );
-    // TODO: "delete debug logs throughout"
-    console.info(`Employee data for ${eecode}:`, response.data);
+    logger.info(`Employee data for ${eecode}:`, response.data);
     return response.data;
   } catch (error) {
-    console.error(
-      `Error fetching employee data for ${eecode}:`,
-      error
-    );
+    handleServiceError(error, eecode, 'fetching employee data');
     return null;
   }
 }
 
 /**
- * Fetches employee directory data for an individual employee by their EE Code.
+ * Fetches employee directory data with pagination.
  *
- * @param {number} page - The current page number.
- * @param {number} limit - The number of results per page.
- * @returns {Promise<{ data: IEmployeeDirectory, total: number }>} - A promise that resolves to the paginated employee directory data.
+ * @param page - The current page number.
+ * @param limit - The number of results per page.
+ * @returns A promise that resolves to the paginated employee directory data, or null if there was an error.
  */
 export async function getPaginatedEmployeeDirectory(
   page: number,
@@ -55,17 +51,15 @@ export async function getPaginatedEmployeeDirectory(
       await apiClient.get<IEmployeeDirectoryCallResponse>(
         `/${UrlParameters.EmployeeDirectory}?${queryString}`
       );
+    logger.info(
+      `Fetched employee directory page ${page} with limit ${limit}`
+    );
     return {
       data: response.data.data,
       total: Number(response.headers['x-total-count'])
     };
   } catch (error) {
-    // TODO: "delete debug logs throughout"
-
-    console.error(
-      'Error fetching employee directory data for: ',
-      error
-    );
+    handleServiceError(error, '', 'fetching employee directory');
     return null;
   }
 }
@@ -73,7 +67,7 @@ export async function getPaginatedEmployeeDirectory(
 /**
  * Fetches custom fields for an individual employee by their EE Code.
  *
- * @param eecode The EE Code of the employee to fetch custom fields for.
+ * @param eecode - The EE Code of the employee to fetch custom fields for.
  * @returns A promise that resolves to the fetched custom fields, or null if there was an error.
  */
 export async function getEmployeeCustomFields(
@@ -83,15 +77,13 @@ export async function getEmployeeCustomFields(
     const response = await apiClient.get<IEmployeeCustomFields>(
       `/${UrlParameters.Employee}/${eecode}/customField`
     );
-    console.info(`Custom fields for ${eecode}:`, response.data);
+    logger.info(
+      `Custom fields for employee ${eecode}:`,
+      response.data
+    );
     return response.data;
   } catch (error) {
-    // TODO: "delete debug logs throughout"
-
-    console.error(
-      `Error fetching employee directory data for ${eecode}:`,
-      error
-    );
+    handleServiceError(error, eecode, 'fetching custom fields');
     return null;
   }
 }
@@ -99,7 +91,7 @@ export async function getEmployeeCustomFields(
 /**
  * Fetches sensitive data for an individual employee by their EE Code.
  *
- * @param eecode The EE Code of the employee to fetch sensitive data for.
+ * @param eecode - The EE Code of the employee to fetch sensitive data for.
  * @returns A promise that resolves to the fetched sensitive data, or null if there was an error.
  */
 export async function getEmployeeSensitiveData(
@@ -109,15 +101,10 @@ export async function getEmployeeSensitiveData(
     const response = await apiClient.get<IEmployeeSensitive>(
       `/${UrlParameters.Employee}/${eecode}/sensitive`
     );
-    console.info(`Sensitive data for ${eecode}:`, response.data);
+    logger.info(`Sensitive data fetched for employee ${eecode}.`);
     return response.data;
   } catch (error) {
-    // TODO: "delete debug logs throughout"
-
-    console.error(
-      `Error fetching employee directory data for ${eecode}:`,
-      error
-    );
+    handleServiceError(error, eecode, 'fetching sensitive data');
     return null;
   }
 }

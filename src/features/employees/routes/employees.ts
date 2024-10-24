@@ -5,92 +5,77 @@ import {
   getEmployeeCustomFields,
   getEmployeeSensitiveData
 } from '../services/employeeFetch';
-import { AppError } from '@/global/middlewares/error/AppError';
-import { UrlParameters } from '../../../global/constants/parameters';
+import { AppError } from '@/middlewares/error/AppError';
+import notFoundError from '@/middlewares/notFound';
+import { UrlParameters } from '@/utils/pathParameters';
+import asyncHandler from '@/services/asyncHandler';
 
-const router = Router()
-  .get(
-    `/${UrlParameters.Employee}/:eecode`,
+const router = Router();
+
+router.get(
+  `/${UrlParameters.Employee}/:eecode`,
+  asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { eecode } = req.params;
-        const employee = await getEmployeeByEecode(eecode);
-        if (!employee) {
-          return next(
-            new AppError(
-              `Employee with EE code ${eecode} not found`,
-              404
-            )
-          );
-        }
-        res.status(200).json(employee);
-      } catch (error) {
-        next(error);
+      const { eecode } = req.params;
+      const employee = await getEmployeeByEecode(eecode);
+      if (!employee) {
+        return next(notFoundError('Employee', eecode));
       }
+      res.status(200).json(employee);
     }
   )
+);
 
-  .get(
-    `/${UrlParameters.EmployeeDirectory}`,
+router.get(
+  `/${UrlParameters.EmployeeDirectory}`,
+  asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const page = parseInt(req.query.page as string) || 1;
-        const limit = parseInt(req.query.limit as string) || 10;
-        const employeeDirectory = await getPaginatedEmployeeDirectory(
-          page,
-          limit
+      const page = req.query.page
+        ? parseInt(req.query.page as string, 10)
+        : 1;
+      const limit = req.query.limit
+        ? parseInt(req.query.limit as string, 10)
+        : parseInt(process.env.DEFAULT_PAGINATION_LIMIT || '10', 10);
+      const employeeDirectory = await getPaginatedEmployeeDirectory(
+        page,
+        limit
+      );
+      if (!employeeDirectory) {
+        return next(
+          new AppError('Employee directory not found', 404)
         );
-        if (!employeeDirectory) {
-          return next(
-            new AppError('Employee directory not found', 404)
-          );
-        }
-        res.status(200).json(employeeDirectory);
-      } catch (error) {
-        next(error);
       }
+      res.status(200).json(employeeDirectory);
     }
   )
+);
 
-  .get(
-    `/${UrlParameters.Employee}/:eecode/customField`,
+router.get(
+  `/${UrlParameters.Employee}/:eecode/customfield`,
+  asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { eecode } = req.params;
-        const customFields = await getEmployeeCustomFields(eecode);
-        if (!customFields) {
-          return next(
-            new AppError(
-              `Custom fields for EE code ${eecode} not found`,
-              404
-            )
-          );
-        }
-        res.status(200).json(customFields);
-      } catch (error) {
-        next(error);
+      const { eecode } = req.params;
+      const customFields = await getEmployeeCustomFields(eecode);
+      if (!customFields) {
+        return next(notFoundError('Custom fields', eecode));
       }
+      res.status(200).json(customFields);
     }
   )
+);
 
-  .get(
-    `/${UrlParameters.Employee}/:eecode/sensitive`,
+router.get(
+  `/${UrlParameters.Employee}/:eecode/sensitive`,
+  asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { eecode } = req.params;
-        const sensitiveData = await getEmployeeSensitiveData(eecode);
-        if (!sensitiveData) {
-          return next(
-            new AppError(
-              `Sensitive data for EE code ${eecode} not found`,
-              404
-            )
-          );
-        }
-        res.status(200).json(sensitiveData);
-      } catch (error) {
-        next(error);
+      const { eecode } = req.params;
+      const sensitiveData = await getEmployeeSensitiveData(eecode);
+      if (!sensitiveData) {
+        return next(notFoundError('Sensitive data', eecode));
       }
+      res.status(200).json(sensitiveData);
     }
-  );
+  )
+);
+
 export default router;

@@ -2,22 +2,18 @@ import { AxiosError } from 'axios';
 import { NextFunction, Request, Response } from 'express';
 import { AppError } from './AppError';
 import isAxiosError from './AxiosError';
+import logger from '@/services/logger';
 
 /**
- * A centralized error handler for Express.js. This function will catch and handle
- * the following types of errors:
+ * Centralized error handler for Express.
  *
- * - AxiosError: errors that occur when making requests to external services
- * - AppError: operational errors that we can recover from
- * - Error: non-operational errors that we cannot recover from
+ * Logs the error to the console in development,
+ * and logs the error to the logger in production.
  *
- * If the error is not an instance of one of the above types, it will fall back
- * to a generic 500 error.
- *
- * @param err - The error to handle
- * @param req - The Express.js request object
- * @param res - The Express.js response object
- * @param next - The Express.js next function
+ * @param {unknown} err The error object
+ * @param {Request} req The request object
+ * @param {Response} res The response object
+ * @param {NextFunction} next The next function
  */
 export function errorHandler(
   err: unknown,
@@ -25,39 +21,52 @@ export function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  // TODO: "delete debug logs throughout"
-  console.error('Error:', err);
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  logger.error(`Error occurred on ${req.method} ${req.url}`, {
+    method: req.method,
+    url: req.url,
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+    body: req.body,
+    error: err instanceof Error ? err.message : err
+  });
+
+  if (err instanceof Error && err.stack) {
+    logger.error(err.stack);
+  }
 
   if (isAxiosError(err)) {
     const axiosError = err as AxiosError;
     const statusCode = axiosError.response?.status || 500;
-    const message =
-      (axiosError.response?.data as { message?: string })?.message ||
-      axiosError.message ||
-      'An error occurred that fell through to the error handler.';
+    const message = isProduction
+      ? 'Service unavailable'
+      : axiosError.response?.data || 'External service error';
+
     return res.status(statusCode).json({
       status: 'error',
       message
     });
   }
+
   if (err instanceof AppError) {
     return res.status(err.statusCode || 500).json({
       status: 'error',
       message: err.isOperational
         ? err.message
-        : 'Internal Server Error'
+        : isProduction
+          ? 'Internal Server Error'
+          : err.message
     });
   }
 
-  // Handle other types of errors (non-operational errors)
   if (err instanceof Error) {
     return res.status(500).json({
       status: 'error',
-      message: err.message || 'Internal Server Error'
+      message: isProduction ? 'Internal Server Error' : err.message
     });
   }
 
-  // If the error doesn't match any known type, fall back to a generic 500 error
   return res.status(500).json({
     status: 'error',
     message: 'An unknown error occurred'

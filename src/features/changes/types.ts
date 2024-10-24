@@ -1,4 +1,3 @@
-// --An Employee with Changes - Sensitive--
 export interface IEmployeeChangesSensitive {
   changedby: string;
   changedesc: string;
@@ -31,7 +30,6 @@ export interface IEmployeeChanges {
   usetype: string;
 }
 
-// --List of Employee Codes for Employees with Changes--
 export interface IEECodesOfEmployeesWithChanges {
   eecode: string;
   changescount: number;
