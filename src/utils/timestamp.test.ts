@@ -1,27 +1,39 @@
-import parseToUnixTimestamp from './timestamp';
+import parseToUnixTimestamp from '@/utils/timestamp';
 
-test('should return the same number if the input is a UNIX timestamp', () => {
-  const timestamp = 1633072800;
-  expect(parseToUnixTimestamp(timestamp)).toBe(timestamp);
+test('should return the same value if passed a UNIX timestamp (in seconds)', () => {
+  const unixTimestamp = 1633046400;
+  const result = parseToUnixTimestamp(unixTimestamp);
+  expect(result).toBe(unixTimestamp);
 });
 
-test('should parse a valid date string to a UNIX timestamp', () => {
-  const dateString = '2021-10-01';
-  const expectedTimestamp = 1633046400; // UNIX timestamp for 2021-10-01 00:00:00 UTC
-  expect(parseToUnixTimestamp(dateString)).toBe(expectedTimestamp);
+test('should convert a valid "YYYY-MM-DD" date string to a UNIX timestamp', () => {
+  const dateString = '2023-10-01';
+  const expectedUnixTimestamp = Math.floor(
+    new Date(dateString).getTime() / 1000
+  );
+  const result = parseToUnixTimestamp(dateString);
+  expect(result).toBe(expectedUnixTimestamp);
 });
 
-test('should throw an error for an invalid date string', () => {
-  const invalidDateString = 'invalid-date';
-  expect(() => parseToUnixTimestamp(invalidDateString)).toThrowError(
-    `Invalid date format: ${invalidDateString}`
+test('should convert a valid "YYYY-MM-DDTHH:mm:ss" date string to a UNIX timestamp', () => {
+  const dateString = '2023-10-01T15:30:00';
+  const expectedUnixTimestamp = Math.floor(
+    new Date(dateString).getTime() / 1000
+  );
+  const result = parseToUnixTimestamp(dateString);
+  expect(result).toBe(expectedUnixTimestamp);
+});
+
+test('should throw an error for an invalid ISO date string', () => {
+  const invalidDateString = '2023-25-01';
+  expect(() => parseToUnixTimestamp(invalidDateString)).toThrow(
+    'Invalid ISO date format'
   );
 });
 
-test('should parse a date string with time to a UNIX timestamp', () => {
-  const dateTimeString = '2021-10-01T12:00:00Z';
-  const expectedTimestamp = 1633089600; // UNIX timestamp for 2021-10-01 12:00:00 UTC
-  expect(parseToUnixTimestamp(dateTimeString)).toBe(
-    expectedTimestamp
+test('should throw an error for an invalid string', () => {
+  const invalidDateString = 'invalid-date';
+  expect(() => parseToUnixTimestamp(invalidDateString)).toThrow(
+    'Invalid ISO date format'
   );
 });

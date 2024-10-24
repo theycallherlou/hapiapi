@@ -1,14 +1,17 @@
 export default {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest'
   },
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx'],
-  testEnvironment: 'node',
+  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
   roots: ['.'],
-  preset: 'ts-jest',
+  verbose: true,
   clearMocks: true,
   resetMocks: true,
-  testMatch: ['<rootDir>/**/*.test.ts'],
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-  verbose: true
+  testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)']
 };
