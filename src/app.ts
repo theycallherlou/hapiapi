@@ -1,3 +1,4 @@
+import path, { dirname } from 'path';
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -7,8 +8,11 @@ import employeeRouter from './features/employees/routes/employees';
 import employeeNewHireRouter from './features/employeeNewHire/routes/employeeNewHire';
 import changesRouter from './features/changes/routes/changes';
 import { errorHandler } from './middlewares/error/errorHandler';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
 
@@ -30,6 +34,13 @@ const limiter = rateLimit({
 app.use(limiter);
 
 app.use(express.urlencoded({ extended: true }));
+
+app.use(express.static(path.join(__dirname, '../public')));
+
+// Serve index.html for the root path
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../public/index.html'));
+});
 
 app.use('/api/v1', employeeRouter);
 

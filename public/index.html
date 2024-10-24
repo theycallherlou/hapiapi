@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+
+    <!-- Skeleton CSS CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Fira+Code:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="./stylesheets/index.css"
+      type="text/css"
+    />
+
+    <title>Lifecycle</title>
+  </head>
+  <body>
+    <header>
+      <h1>API Endpoint Reference</h1>
+    </header>
+    <main>
+      <div class="container">
+        <table>
+          <thead>
+            <tr>
+              <th>Category</th>
+              <th>SubCategory</th>
+              <th>Endpoint</th>
+              <th>Description</th>
+              <th>Parameters</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Response</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Employee</td>
+              <td>Employee Directory</td>
+              <td class="3">
+                /api/v1/employeedirectory
+              </td>
+              <td>Return employee demographics for all employees</td>
+              <td>pagesize</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/employeedirectory">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee</td>
+              <td>Employee Directory</td>
+              <td>
+                /api/v1/employeedirectory/:eecode
+              </td>
+              <td>
+                Return employee demographics for an individual
+                employee
+              </td>
+              <td>eecode (required)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/employeedirectory/:eecode">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee</td>
+              <td>Employee</td>
+              <td>
+                /api/v1/employee/:eecode
+              </td>
+              <td>
+                Return a non-sensitive master record for an individual
+                employee
+              </td>
+              <td>eecode (required)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/employee/:eecode">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee</td>
+              <td>Employee Sensitive</td>
+              <td>
+                /api/v1/employee/:eecode/sensitive
+              </td>
+              <td>
+                Return a sensitive & non-sensitive master record for
+                an individual employee
+              </td>
+              <td>eecode (required)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/employee/:eecode/sensitive">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee</td>
+              <td>Employee Custom Fields</td>
+              <td>
+                /api/v1/employee/:eecode/customfield
+              </td>
+              <td>
+                Return the custom fields for an individual employee
+              </td>
+              <td>eecode (required)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/employee/:eecode/customfield">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee</td>
+              <td>Employee ID</td>
+              <td>/api/v1/employeeid</td>
+              <td>
+                Return a list of employee identifiers for all
+                employees.
+              </td>
+              <td>
+                eestatus (optional), pagesize (optional, default 500)
+              </td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href=/api/v1/employeeid">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee</td>
+              <td>Employee ID</td>
+              <td>
+                /api/v1/employeeid/:eecode
+              </td>
+              <td>
+                Return a list of employee identifiers for an
+                individual employee
+              </td>
+              <td>eecode (required), (optional)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/employeeid/:eecode">view</a></td>
+            </tr>
+            <tr>
+              <td>Changes</td>
+              <td>Employee Changes</td>
+              <td>
+                /api/v1/employee/:eecode/change/:change-id
+              </td>
+              <td>
+                Return an audit log of updates made to non-sensitive
+                employee fields for one employee for a specified date
+                range. May not exceed 7 days prior.
+              </td>
+              <td>eecode (required), change-id (required)</td>
+              <td>7 days prior</td>
+              <td>Present day</td>
+              <td><a href=" /api/v1/employee/:eecode/change/:change-id">view</a></td>
+            </tr>
+            <tr>
+              <td>Changes</td>
+              <td>Employee Changes Sensitive</td>
+              <td>
+                /api/v1/employee/:eecode/sensitivechange/:change-id
+              </td>
+              <td>
+                Return an audit log of updates made to the sensitive
+                and non-sensitive employee fields for one employee for
+                a specified date range. May not exceed 7 days prior.
+              </td>
+              <td>eecode (required), change-id (required)</td>
+              <td>7 days prior</td>
+              <td>Present day</td>
+              <td><a href="/api/v1/employee/:eecode/sensitivechange/:change-id">view</a></td>
+            </tr>
+            <tr>
+              <td>Changes</td>
+              <td>EE Codes of Employees with Changes</td>
+              <td>
+                /api/v1/employeeids/employeechanges
+              </td>
+              <td>
+                The Get method uses a specified time/date range to
+                return a list of Employee Codes of those who have
+                changes in that timeframe. Date range may not exceed
+                24 hours.
+              </td>
+              <td>n/a</td>
+              <td>1 hour prior</td>
+              <td>Present</td>
+              <td><a href="/api/v1/employeeids/employeechanges">view</a></td>
+            </tr>
+            <tr>
+              <td>New Hire</td>
+              <td>New Hire</td>
+              <td>
+                /api/v1/newhire/:new-hire-id
+              </td>
+              <td>
+                Returns the New Hires information for the given new
+                hire id.
+              </td>
+              <td>new-hire-id (required)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/newhire/:new-hire-id">view</a></td>
+            </tr>
+            <tr>
+              <td>New Hire</td>
+              <td>New Hire IDs</td>
+              <td>/api/v1/newhireids</td>
+              <td>
+                Return a list of IDs of New Hires within a given time
+                range.
+              </td>
+              <td>n/a</td>
+              <td>30 days prior</td>
+              <td>Present day</td>
+              <td><a href="/api/v1/newhireids">view</a></td>
+            </tr>
+            <tr>
+              <td>New Hire</td>
+              <td>New Hire Custom Fields</td>
+              <td>
+                /api/v1/newhire/:new-hire-id/customfield
+              </td>
+              <td>Return custom field information for new hires.</td>
+              <td>new-hire-id (required)</td>
+              <td>n/a</td>
+              <td>n/a</td>
+              <td><a href="/api/v1/newhire/:new-hire-id/customfield">view</a></td>
+            </tr>
+            <tr>
+              <td>Employee New Hire</td>
+              <td>Employee New Hire</td>
+              <td class="endpoint-column">
+                /api/v1/employeenewhire/:eecode
+              </td>
+              <td>
+                Return a list of employees added in a specific date
+                range. Not to exceed 14 days.
+              </td>
+              <td>eecode (required)</td>
+              <td>14 days prior</td>
+              <td>Present day</td>
+              <td><a href=" /api/v1/employeenewhire/:eecode">view</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </body>
+</html>

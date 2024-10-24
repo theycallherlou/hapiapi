@@ -4,7 +4,7 @@ import fs from 'fs';
 
 const timestamp = new Date().toISOString().replace(/:/g, '-');
 
-const logDirectory = path.join(__dirname, '../../logs');
+const logDirectory = process.cwd() + '/src/logs';
 
 if (!fs.existsSync(logDirectory)) {
   fs.mkdirSync(logDirectory);

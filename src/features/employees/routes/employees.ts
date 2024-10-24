@@ -13,20 +13,6 @@ import asyncHandler from '@/services/asyncHandler';
 const router = Router();
 
 router.get(
-  `/${UrlParameters.Employee}/:eecode`,
-  asyncHandler(
-    async (req: Request, res: Response, next: NextFunction) => {
-      const { eecode } = req.params;
-      const employee = await getEmployeeByEecode(eecode);
-      if (!employee) {
-        return next(notFoundError('Employee', eecode));
-      }
-      res.status(200).json(employee);
-    }
-  )
-);
-
-router.get(
   `/${UrlParameters.EmployeeDirectory}`,
   asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
@@ -51,15 +37,29 @@ router.get(
 );
 
 router.get(
-  `/${UrlParameters.Employee}/:eecode/customfield`,
+  `/${UrlParameters.EmployeeDirectory}/:eecode`,
   asyncHandler(
     async (req: Request, res: Response, next: NextFunction) => {
       const { eecode } = req.params;
-      const customFields = await getEmployeeCustomFields(eecode);
-      if (!customFields) {
-        return next(notFoundError('Custom fields', eecode));
+      const employee = await getEmployeeByEecode(eecode);
+      if (!employee) {
+        return next(notFoundError('Employee', eecode));
       }
-      res.status(200).json(customFields);
+      res.status(200).json(employee);
+    }
+  )
+);
+
+router.get(
+  `/${UrlParameters.Employee}/:eecode`,
+  asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const { eecode } = req.params;
+      const employee = await getEmployeeByEecode(eecode);
+      if (!employee) {
+        return next(notFoundError('Employee', eecode));
+      }
+      res.status(200).json(employee);
     }
   )
 );
@@ -74,6 +74,20 @@ router.get(
         return next(notFoundError('Sensitive data', eecode));
       }
       res.status(200).json(sensitiveData);
+    }
+  )
+);
+
+router.get(
+  `/${UrlParameters.Employee}/:eecode/customfield`,
+  asyncHandler(
+    async (req: Request, res: Response, next: NextFunction) => {
+      const { eecode } = req.params;
+      const customFields = await getEmployeeCustomFields(eecode);
+      if (!customFields) {
+        return next(notFoundError('Custom fields', eecode));
+      }
+      res.status(200).json(customFields);
     }
   )
 );
